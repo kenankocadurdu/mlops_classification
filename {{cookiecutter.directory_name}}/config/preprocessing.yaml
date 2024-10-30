@@ -1,0 +1,29 @@
+hydra:
+  output_subdir: null  
+  run:
+    dir: .
+
+data:
+  raw_path: data/raw/
+  processed_path: data/processed/
+  dirs:
+    - train
+    - val
+  classes:
+    - benign
+    - malignant
+  file: png
+
+
+preprocessing:
+  _target_: utils.preprocessor.Executor
+  image_size: 256
+  remove_noise: True
+  apply_clahe: False
+  apply_gamma_corr: False
+  median_filter: False
+  adaptive_mean_filter: False
+  gaussian_filter: False
+
+defaults:
+  - _self_

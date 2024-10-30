@@ -1,0 +1,47 @@
+hydra:
+  output_subdir: null  
+  run:
+    dir: .
+
+model:
+  - XResnet50
+  - resnet50
+
+model_params:
+  num_class: 2
+  image_size: 256
+
+training:
+  _target_: utils.trainer.Executor
+  path_dataset_train: data/processed/train/
+  path_dataset_val: data/processed/val/
+  batch_size: 8
+  num_threads: 1
+  device_id: 0
+  num_epochs: 20
+  lr: 0.001
+  patience: 5
+  opt_func: Adam   # RMSprop, SGD, Adam, AdamW, Adagrad
+  criterion: CrossEntropyLoss # CrossEntropyLoss, BCEWithLogitsLoss, FocalLoss
+  normalize: True
+  ml_flow: False
+  log_desc: Adam - CrossEntropyLoss
+
+
+  #evaluation
+  path_testset: data/processed/val
+  save_path: models
+  path_pth: models
+  load_w: False
+
+evaluation:
+  _target_: utils.predictor.Executor
+  path_testset: data/processed/val
+  save_path: models
+  path_pth: models
+  normalize: True
+  path_trainset: data/processed/train # if normalization=true will use
+  product: True
+
+defaults:
+  - _self_
